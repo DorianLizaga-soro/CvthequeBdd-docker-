@@ -1,0 +1,177 @@
+body {
+    background-image: url(/img/background.jpg);
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 200px;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 100pt;
+    background-color: rgb(228, 225, 225);
+    border-radius: 10px;
+}
+
+#btnAdd {
+    background-color: white;
+    width: 50px;
+    height: 50px;
+    align-content: center;
+    border-radius: 5px;
+}
+
+#circlePlus {
+    width: 50px;
+    font-size: 45px;
+}
+
+#flip-box {
+    background-color: transparent;
+    width: 300px;
+    height: 300px;
+    perspective: 1000px;
+}
+
+.flip-box-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    text-align: center;
+}
+
+.sectionmain {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: auto auto auto;
+    gap: 150px 50px;
+    margin-top: 50px;
+}
+
+#flip-box:hover .flip-box-inner {
+    transform: rotateY(-180deg);
+}
+
+.personne-front,
+.personne-back {
+    position: absolute;
+    width: 250px;
+    height: auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    padding: 20px;
+}
+
+.personne-front {
+    background-color: rgb(255, 255, 255);
+    color: #3C9A84;
+    font-size: 12pt;
+    border-radius: 10px;
+}
+
+.personne-back {
+    background-color: white;
+    transform: rotateY(-180deg);
+     border-radius: 10px;
+}
+
+.Search {
+    width: 550px;
+}
+
+.Search input {
+    width: 500px;
+    height: 30px;
+    border: 1px solid black;
+    border-left: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 5px;
+}
+
+.Search button {
+    width: 40px;
+    height: 30px;
+    background-color: green;
+    border: 1px solid black;
+    border-right: none;
+    float: left;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    cursor: pointer;
+}
+
+#btnTri{
+    width: 500px;
+    height: 30px;
+}
+
+#choixTri{
+    width: 150px;
+    height: 30px;
+}
+
+#choixOrdre{
+    width: 250px;
+    height: 30px;
+}
+
+.list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#iconFiche{
+    font-size: 80pt;
+}
+
+#iconFiche{
+    font-size: 30pt;
+    padding: 10px;
+}
+
+.btnFiche{
+    background-color: rgb(0, 63, 0);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: auto;
+    height: 25px;
+    cursor: pointer;
+}
+.ficheComp{
+    background-color: aqua;
+}
+
+.articleComp{
+    display: flex;
+    flex-wrap: wrap;
+    gap:10px;
+    padding: 10px;
+}
+
+.ficheComp{
+    background-color: rgb(218, 218, 218);
+    padding: 2px;
+    padding-right: 5px;
+    margin: 0px;
+    font-size: 10pt;
+    color: grey;
+}
+
+#convertisseurJson{
+    font-size: 50pt;
+
+}
+
