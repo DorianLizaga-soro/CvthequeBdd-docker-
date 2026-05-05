@@ -142,17 +142,17 @@ function age2($birthdate) {
                     $ext = strtolower(pathinfo($c['cv'],PATHINFO_EXTENSION));
 
                     if($ext === "pdf"){
-                    echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"><i id="iconFiche" class="fa-regular fa-file-pdf" style="color: rgb(0, 0, 0);"></i>
+                    echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"target="_blank"><i id="iconFiche" class="fa-regular fa-file-pdf" style="color: rgb(0, 0, 0);"></i>
                     </a><br><br>';
                     }
 
                     elseif($ext === "doc" || $ext === "docx" ){
-                    echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"><i id="iconFiche" class="fa-regular fa-file-word" style="color: rgb(0, 0, 0);"></i>
+                    echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"target="_blank"><i id="iconFiche" class="fa-regular fa-file-word" style="color: rgb(0, 0, 0);"></i>
                     </a><br><br>';
                     }
 
                     else{
-                        echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"><i id="iconFiche" class="fa-regular fa-file" style="color: rgb(0, 0, 0);"></i>
+                        echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"target="_blank"><i id="iconFiche" class="fa-regular fa-file" style="color: rgb(0, 0, 0);"></i>
                     </a><br><br>';
                     }
 
@@ -161,10 +161,8 @@ function age2($birthdate) {
                 }
 ?>
 
-            
-            <br><br> 
-            <button class="btnFiche" onclick="window.location.href='editBdd.php?id=<?= $c['id'] ?>'" >Modifier</button>
-            <button class="btnFiche" onclick="if(confirm('Supprimer ce candidat ?')){ window.location.href='deleteBdd.php?id=<?= $c['id'] ?>';}"  >Supprimer</button>
+            <button class="btnFiche" onclick="window.location.href='index.php?page=edit&id=<?= $c['id'] ?>'" >Modifier</button>
+            <button class="btnFiche" onclick="if(confirm('Supprimer ce candidat ?')){ window.location.href='index.php?page=delete&id=<?= $c['id'] ?>';}"  >Supprimer</button>
         </article>
     </article>
 </div>

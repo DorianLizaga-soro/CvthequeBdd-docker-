@@ -3,10 +3,7 @@
 $id = $_GET['id'] ?? null;
 if(!$id) die("ID manquant");
 
-
-require "connexionBdd.php";
-
-
+//on recupere les données du candidat dans les tables de la bdd
 $stmt = $pdo->prepare("SELECT * FROM candidat WHERE id = ?");
 $stmt->execute([$id]);
 $candidat = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -14,8 +11,6 @@ $candidat = $stmt->fetch(PDO::FETCH_ASSOC);
 $stmt = $pdo->prepare("SELECT * FROM adresse WHERE id = ?");
 $stmt->execute([$candidat['adresse_id']]);
 $adresse = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
 
 $stmt = $pdo->prepare(" SELECT c.nom_competence 
     FROM candidat_competence cc
@@ -25,16 +20,12 @@ $stmt = $pdo->prepare(" SELECT c.nom_competence
 $stmt->execute([$id]);
 $competences = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-
 for ($i = 0; $i < 10; $i++) {
     $competences[$i] = $competences[$i] ?? '';
 }
 
-
-
-
 if(!$candidat) die("Introuvable");
-
+//on recupere les infos du formulaire pour les mettres a jour dans la bdd 
 if($_SERVER["REQUEST_METHOD"] === "POST"){
 
     $cvName = $candidat['cv']; 
@@ -141,7 +132,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
 
 
-    header("Location: index.php");
+    header('Location: index.php?page=list');
     exit;
 }
 ?>
@@ -149,15 +140,14 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 <link rel="stylesheet" href="/css/styleEdit.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<a href="index.php"><i id="retourAdd" class="fa-solid fa-circle-chevron-left fa-bounce" style="color: rgb(99, 230, 190);"></i></a>
+<a href="index.php?page=list"><i id="retourAdd" class="fa-solid fa-circle-chevron-left fa-bounce" style="color: rgb(99, 230, 190);"></i></a>
 
 <section class="sectionEdit">
 
 <article class="formEdit">
 
-
 <form method="post" enctype="multipart/form-data">
-<h1>Modifier candidat</h1>
+<h2>Modifier candidat</h2>
 Nom : <input class="inputAdd" name="nom" value="<?= htmlspecialchars($candidat['nom'] ?? '') ?>"> 
 Prénom : <input class="inputAdd" name="prenom" value="<?= htmlspecialchars($candidat['prenom'] ?? '') ?>">
 Date naissance : <input class="inputAdd" type="date" name="date_naissance" value="<?= htmlspecialchars($candidat['date_naissance'] ?? '') ?>"><br><br>

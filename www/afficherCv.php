@@ -1,4 +1,5 @@
 <?php 
+//prend l'id du candidat
 $id = $_GET['id'] ?? null;
 if(!$id) die("ID manquant");
 
@@ -10,7 +11,7 @@ $candidat = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 $cvName = $candidat['cv'] ?? null;
-
+//si il a un cv on laffiche en fonction de son extension
 if (!empty($cvName) && $cvName !== "NULL") {
 
     $file = __DIR__ . "/uploads/" . $cvName;

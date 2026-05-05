@@ -1,6 +1,6 @@
 <?php
-require "connexionBdd.php";
 
+// fonction age automatique
 function age($birthdate) {
    
     $dateofbirth=DateTime::createFromFormat("Y-m-d",$birthdate);
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreur = "Champs obligatoires manquants";
 
     } else {
-
+//compte pour les competences
         $count = 0;
         for($i=1;$i<=10;$i++){
             if(!empty($_POST["competence$i"])) $count++;
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $erreur = "Le fichier doit être un PDF";
             }
         }
-
+//si pas derreur on insert dans la bdd les infos du formulaire
         if(!$erreur){
 
             $stmt = $pdo->prepare("INSERT INTO adresse (ligne1, ligne2, code_postal, ville) VALUES (:l1, :l2, :cp, :ville)");
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            header("Location: index.php");
+            header('Location: index.php?page=list');
             exit;
         }
     }
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="/css/styleForm.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<a href="index.php"><i id="retourAdd" class="fa-solid fa-circle-chevron-left fa-bounce" style="color: rgb(99, 230, 190);"></i></a>
+<a href="index.php?page=list"><i id="retourAdd" class="fa-solid fa-circle-chevron-left fa-bounce" style="color: rgb(99, 230, 190);"></i></a>
 
 <section class="sectionForm">
 
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php endif; ?>
 
 <form method="post" enctype="multipart/form-data">
-<h1>Ajouter un candidat</h1>
+<h2>Ajouter un candidat</h2>
 * champs obligatoires.<br><br>
 Nom* : <input class="inputAdd" name="nom"> 
 Prénom* : <input class="inputAdd" name="prenom">

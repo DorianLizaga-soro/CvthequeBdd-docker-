@@ -8,7 +8,7 @@ require "connexionBdd.php";
 $stmt = $pdo->prepare("DELETE FROM candidat WHERE id = :id");
 $stmt->execute(['id' => $id]);
 
-header("Location: index.php");
+header('Location: index.php?page=list');
 
 exit;
 
