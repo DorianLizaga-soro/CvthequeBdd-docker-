@@ -1,19 +1,46 @@
 <?php 
-require_once "includes/functions.php";
 $id = $_GET['id'] ?? null;
 if(!$id) die("ID manquant");
-$candidats = trouverCandidatParId($id);
-if(!$candidats) die("Introuvable");
- if(!empty($candidats[27]) && $candidats[27] !== "NULL"):
-  $file="uploads/$candidats[27]";
-  $fileSize = filesize($file);
-  header('Content-Type: application/pdf');
+
+require "connexionBdd.php";
+
+$stmt = $pdo->prepare("SELECT * FROM candidat WHERE id = ?");
+$stmt->execute([$id]);
+$candidat = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+$cvName = $candidat['cv'] ?? null;
+
+if (!empty($cvName) && $cvName !== "NULL") {
+
+    $file = __DIR__ . "/uploads/" . $cvName;
+
+    if (!file_exists($file)) {
+        die("Fichier CV introuvable");
+    }
+
+    $ext = strtolower(pathinfo($file,PATHINFO_EXTENSION));
+    $fileSize = filesize($file);
+
+if ($ext ==="pdf"){
+      header("Content-Type: application/pdf");
+    }elseif($ext === "doc" || $ext === "docx"){
+      header("Content-Type: application/msword");
+    }
+    else{
+      header("Content-Type: application/octet-stream");
+    }
     header('Content-Disposition: inline; filename="' . basename($file) . '"');
-    header('Content-Length: ' . $fileSize);
-    header('Accept-Ranges: bytes');
-    ob_clean();
+    header("Content-Length: " . $fileSize);
+    header("Accept-Ranges: bytes");
+    if (ob_get_length()) {
+        ob_clean();
+    }
     flush();
     readfile($file);
     exit;
-endif;
+}
+
 ?>
+
+

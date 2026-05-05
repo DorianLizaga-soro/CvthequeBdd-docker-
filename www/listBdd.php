@@ -13,7 +13,7 @@ $map = [
 
 $champ=$map[$col]??"c.nom";
 
-$sql= "SELECT c.id,c.nom,c.prenom,c.age,c.email,c.tel_portable,c.profil,a.ligne1,a.ligne2,a.code_postal,a.ville,
+$sql= "SELECT c.id,c.nom,c.prenom,c.age,c.email,c.tel_portable,c.profil,c.cv,a.ligne1,a.ligne2,a.code_postal,a.ville,
 GROUP_CONCAT(DISTINCT co.nom_competence SEPARATOR '|') 
 AS competences FROM candidat c 
 LEFT JOIN adresse a ON c.adresse_id = a.id 
@@ -124,6 +124,30 @@ $candidats = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p><?= htmlspecialchars($c['tel_portable']) ?></p>
             <p><?= htmlspecialchars($c['email']) ?></p>
             Mail : <a href="mailto:<?= htmlspecialchars($c['email']) ?>"><i id="iconFiche" class="fa-regular fa-envelope" style="color: rgb(0, 0, 0);"></i></a>
+
+           <?php
+                if (!empty($c['cv'])) {
+                    $ext = strtolower(pathinfo($c['cv'],PATHINFO_EXTENSION));
+
+                    if($ext === "pdf"){
+                    echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"><i id="iconFiche" class="fa-regular fa-file-pdf" style="color: rgb(0, 0, 0);"></i>
+                    </a><br><br>';
+                    }
+
+                    elseif($ext === "doc" || $ext === "docx" ){
+                    echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"><i id="iconFiche" class="fa-regular fa-file-word" style="color: rgb(0, 0, 0);"></i>
+                    </a><br><br>';
+                    }
+
+                    else{
+                        echo 'CV : <a href="afficherCv.php?id='.$c['id'].'"><i id="iconFiche" class="fa-regular fa-file" style="color: rgb(0, 0, 0);"></i>
+                    </a><br><br>';
+                    }
+
+                } else {
+                    echo 'Aucun CV</p>';
+                }
+?>
 
             
             <br><br> 

@@ -37,6 +37,26 @@ if(!$candidat) die("Introuvable");
 
 if($_SERVER["REQUEST_METHOD"] === "POST"){
 
+    $cvName = $candidat['cv']; 
+
+    if(isset($_FILES['cv']) && $_FILES['cv']['error'] === 0){
+
+        $ext = pathinfo($_FILES['cv']['name'], PATHINFO_EXTENSION);
+
+        
+
+        if(!empty($cvName) && file_exists(__DIR__ . "/uploads/" . $cvName)){
+            unlink(__DIR__ . "/uploads/" . $cvName);
+        }
+        
+        $cvName = "cv_" . $candidat['nom'] . "_" . $candidat['prenom'] . ".pdf";
+
+        if($ext !== "pdf"){
+                    $cvName = "cv_" . $candidat['nom'] . "_" . $candidat['prenom'] . ".docx";
+                }
+        move_uploaded_file($_FILES['cv']['tmp_name'], __DIR__ . "/uploads/" . $cvName);
+    }
+
     $stmt = $pdo->prepare("UPDATE adresse SET 
             ligne1 = :ligne1,
             ligne2 = :ligne2,
@@ -52,9 +72,10 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         'ligne2'          => $_POST['ligne2'],
         'code_postal'     => $_POST['code_postal'],
         'ville'           => $_POST['ville'],
-        'adresse_id'              => $candidat['adresse_id']
+        'adresse_id'      => $candidat['adresse_id']
 
     ]);
+
 
     $stmt = $pdo->prepare("UPDATE candidat SET 
             nom = :nom,
@@ -67,7 +88,8 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
             site_web = :site_web,
             profil_linkedin = :profil_linkedin,
             profil_viadeo = :profil_viadeo,
-            profil_facebook = :profil_facebook
+            profil_facebook = :profil_facebook,
+            cv = :cv
             
         WHERE id = :id
     ");
@@ -84,6 +106,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         'profil_linkedin' => $_POST['profil_linkedin'],
         'profil_viadeo'   => $_POST['profil_viadeo'],
         'profil_facebook' => $_POST['profil_facebook'],
+        'cv'              => $cvName,
         'id'              => $id
     ]);
 
@@ -156,6 +179,14 @@ Ville : <input class="inputAdd" name="ville" value="<?= htmlspecialchars($adress
 <input class="inputAdd" name="competence<?= $i+1 ?>" value="<?= htmlspecialchars($competences[$i]) ?>"><br><br>
 <?php endfor; ?>
 
+<h3>CV actuel</h3>
+
+<?php if(!empty($candidat['cv']) && $candidat['cv'] !== "NULL"): ?>
+<a href="uploads/<?= $candidat['cv'] ?>" target="_blank">Voir CV</a><br>
+<?php endif; ?>
+
+<h3>Remplacer CV</h3>
+<input type="file" name="cv" ><br><br>
 
 <button>Enregistrer</button>
 

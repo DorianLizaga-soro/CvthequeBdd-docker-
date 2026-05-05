@@ -5,75 +5,97 @@ $erreur = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-   
-    if (empty($_POST['nom']) || empty($_POST['prenom']) || empty($_POST['date_naissance']) || empty($_POST['tel_portable']) || empty($_POST['email']) || empty($_POST['profil'])) 
-        {
+    if (empty($_POST['nom']) || empty($_POST['prenom']) || empty($_POST['date_naissance']) || empty($_POST['tel_portable']) || empty($_POST['email']) || empty($_POST['profil'])) {
+
         $erreur = "Champs obligatoires manquants";
+
     } else {
-        
-        $stmt = $pdo->prepare(" INSERT INTO adresse (ligne1, ligne2, code_postal, ville) VALUES (:l1, :l2, :cp, :ville)");
 
-        $stmt->execute([
-            'l1'   => $_POST['ligne1'],
-            'l2'   => $_POST['ligne2'],
-            'cp'   => $_POST['code_postal'],
-            'ville'=> $_POST['ville']
-]);
-
-
-        $adresse_id = $pdo->lastInsertId();
-   
-
-        $stmt = $pdo->prepare(" INSERT INTO candidat (nom, prenom, date_naissance, tel_portable, tel_fixe, email, profil, site_web, profil_linkedin, profil_viadeo, profil_facebook, adresse_id)
-            VALUES (:nom, :prenom, :date_naissance, :tel_portable, :tel_fixe, :email, :profil, :site_web, :profil_linkedin, :profil_viadeo, :profil_facebook, :adresse_id)");
-
-        $stmt->execute([
-            'nom'            => $_POST['nom'],
-            'prenom'         => $_POST['prenom'],
-            'date_naissance' => $_POST['date_naissance'],
-            'tel_portable'   => $_POST['tel_portable'],
-            'tel_fixe'       => $_POST['tel_fixe'],
-            'email'          => $_POST['email'],
-            'profil'         => $_POST['profil'],
-            'site_web'       => $_POST['site_web'],
-            'profil_linkedin'=> $_POST['profil_linkedin'],
-            'profil_viadeo'  => $_POST['profil_viadeo'],
-            'profil_facebook'=> $_POST['profil_facebook'],
-            'adresse_id'     => $adresse_id
-        ]);
-
-$candidat_id = $pdo->lastInsertId();
-
-for ($i = 1; $i <= 10; $i++) {
-    $comp = trim($_POST["competence$i"] ?? '');
-
-    if ($comp !== '') {
-
-       
-        $stmt = $pdo->prepare("SELECT Id FROM competences WHERE nom_competence = :nom");
-        $stmt->execute(['nom' => $comp]);
-        $competence_id = $stmt->fetchColumn();
-
-        if (!$competence_id) {
-                $stmt = $pdo->prepare("INSERT INTO competences (nom_competence) VALUES (?)");
-                $stmt->execute([$comp]);
-                $competence_id = $pdo->lastInsertId();
+        $count = 0;
+        for($i=1;$i<=10;$i++){
+            if(!empty($_POST["competence$i"])) $count++;
         }
-        
-        $stmt = $pdo->prepare("INSERT INTO candidat_competence (candidat_id, competence_id) VALUES (:id, :comp_id)");
-        $stmt->execute([
-            'id'      => $candidat_id,
-            'comp_id' => $competence_id
-        ]);
 
+        if($count < 5){
+            $erreur = "Minimum 5 compétences";
+        }
+
+        $cvName = null;
+
+        if(isset($_FILES['cv']) && $_FILES['cv']['error'] === 0){
+            $ext = pathinfo($_FILES['cv']['name'], PATHINFO_EXTENSION);
+
+            if($ext === "pdf"){
+                $cvName = "cv_" . $_POST['nom'] . ".pdf";
+                move_uploaded_file($_FILES['cv']['tmp_name'], __DIR__ . "/uploads/" . $cvName);
+            } else {
+                $erreur = "Le fichier doit être un PDF";
+            }
+        }
+
+        if(!$erreur){
+
+            $stmt = $pdo->prepare("INSERT INTO adresse (ligne1, ligne2, code_postal, ville) VALUES (:l1, :l2, :cp, :ville)");
+
+            $stmt->execute([
+                'l1'   => $_POST['ligne1'],
+                'l2'   => $_POST['ligne2'],
+                'cp'   => $_POST['code_postal'],
+                'ville'=> $_POST['ville']
+            ]);
+
+            $adresse_id = $pdo->lastInsertId();
+
+            $stmt = $pdo->prepare("INSERT INTO candidat (nom, prenom, date_naissance, tel_portable, tel_fixe, email, profil, site_web, profil_linkedin, profil_viadeo, profil_facebook, cv, adresse_id)
+                VALUES (:nom, :prenom, :date_naissance, :tel_portable, :tel_fixe, :email, :profil, :site_web, :profil_linkedin, :profil_viadeo, :profil_facebook, :cv, :adresse_id)");
+
+            $stmt->execute([
+                'nom'            => $_POST['nom'],
+                'prenom'         => $_POST['prenom'],
+                'date_naissance' => $_POST['date_naissance'],
+                'tel_portable'   => $_POST['tel_portable'],
+                'tel_fixe'       => $_POST['tel_fixe'],
+                'email'          => $_POST['email'],
+                'profil'         => $_POST['profil'],
+                'site_web'       => $_POST['site_web'],
+                'profil_linkedin'=> $_POST['profil_linkedin'],
+                'profil_viadeo'  => $_POST['profil_viadeo'],
+                'profil_facebook'=> $_POST['profil_facebook'],
+                'cv'             => $cvName,
+                'adresse_id'     => $adresse_id
+            ]);
+
+            $candidat_id = $pdo->lastInsertId();
+
+            for ($i = 1; $i <= 10; $i++) {
+                $comp = trim($_POST["competence$i"] ?? '');
+
+                if ($comp !== '') {
+
+                    $stmt = $pdo->prepare("SELECT id FROM competences WHERE nom_competence = :nom");
+                    $stmt->execute(['nom' => $comp]);
+                    $competence_id = $stmt->fetchColumn();
+
+                    if (!$competence_id) {
+                        $stmt = $pdo->prepare("INSERT INTO competences (nom_competence) VALUES (?)");
+                        $stmt->execute([$comp]);
+                        $competence_id = $pdo->lastInsertId();
+                    }
+
+                    $stmt = $pdo->prepare("INSERT INTO candidat_competence (candidat_id, competence_id) VALUES (:id, :comp_id)");
+                    $stmt->execute([
+                        'id'      => $candidat_id,
+                        'comp_id' => $competence_id
+                    ]);
+                }
+            }
+
+            header("Location: index.php");
+            exit;
+        }
     }
 }
 
-
-        header("Location: index.php");
-        exit;
-    }
-}
 ?>
 
 
@@ -114,6 +136,8 @@ Ville : <input class="inputAdd" name="ville">
 Compétence <?= $i ?> : <input class="inputAdd" name="competence<?= $i ?>"><br><br>
 <?php endfor; ?>
 
+<h3>CV (PDF)</h3>
+<input type="file" name="cv"><br><br>
 
 <button>Ajouter</button>
 
