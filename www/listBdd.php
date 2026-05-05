@@ -13,7 +13,7 @@ $map = [
 
 $champ=$map[$col]??"c.nom";
 
-$sql= "SELECT c.id,c.nom,c.prenom,c.age,c.email,c.tel_portable,c.profil,c.cv,a.ligne1,a.ligne2,a.code_postal,a.ville,
+$sql= "SELECT c.id,c.nom,c.prenom,c.age,c.date_naissance,c.email,c.tel_portable,c.profil,c.cv,a.ligne1,a.ligne2,a.code_postal,a.ville,
 GROUP_CONCAT(DISTINCT co.nom_competence SEPARATOR '|') 
 AS competences FROM candidat c 
 LEFT JOIN adresse a ON c.adresse_id = a.id 
@@ -39,6 +39,18 @@ $sql .= " GROUP BY c.id ORDER BY $champ $ordre";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $candidats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+function age2($birthdate) {
+   
+    $dateofbirth=DateTime::createFromFormat("Y-m-d",$birthdate);
+
+    $today=new Datetime();
+    
+    $interval=$today->diff($dateofbirth);
+
+    return $interval->format("%Y");
+
+}
 
 ?>
 

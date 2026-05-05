@@ -1,6 +1,18 @@
 <?php
 require "connexionBdd.php";
 
+function age($birthdate) {
+   
+    $dateofbirth=DateTime::createFromFormat("Y-m-d",$birthdate);
+
+    $today=new Datetime();
+    
+    $interval=$today->diff($dateofbirth);
+
+    return $interval->format("%Y");
+
+}
+
 $erreur = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,12 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $adresse_id = $pdo->lastInsertId();
 
-            $stmt = $pdo->prepare("INSERT INTO candidat (nom, prenom, date_naissance, tel_portable, tel_fixe, email, profil, site_web, profil_linkedin, profil_viadeo, profil_facebook, cv, adresse_id)
-                VALUES (:nom, :prenom, :date_naissance, :tel_portable, :tel_fixe, :email, :profil, :site_web, :profil_linkedin, :profil_viadeo, :profil_facebook, :cv, :adresse_id)");
+            $stmt = $pdo->prepare("INSERT INTO candidat (nom, prenom, age, date_naissance, tel_portable, tel_fixe, email, profil, site_web, profil_linkedin, profil_viadeo, profil_facebook, cv, adresse_id)
+                VALUES (:nom, :prenom, :age, :date_naissance, :tel_portable, :tel_fixe, :email, :profil, :site_web, :profil_linkedin, :profil_viadeo, :profil_facebook, :cv, :adresse_id)");
 
             $stmt->execute([
                 'nom'            => $_POST['nom'],
                 'prenom'         => $_POST['prenom'],
+                'age'            =>age($_POST['date_naissance']),
                 'date_naissance' => $_POST['date_naissance'],
                 'tel_portable'   => $_POST['tel_portable'],
                 'tel_fixe'       => $_POST['tel_fixe'],
@@ -112,7 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php endif; ?>
 
 <form method="post" enctype="multipart/form-data">
-<h1>Ajouter un candidat</h1><br>
+<h1>Ajouter un candidat</h1>
+* champs obligatoires.<br><br>
 Nom* : <input class="inputAdd" name="nom"> 
 Prénom* : <input class="inputAdd" name="prenom">
 Date naissance* : <input class="inputAdd" type="date" name="date_naissance"><br><br>
@@ -136,7 +150,7 @@ Ville : <input class="inputAdd" name="ville">
 Compétence <?= $i ?> : <input class="inputAdd" name="competence<?= $i ?>"><br><br>
 <?php endfor; ?>
 
-<h3>CV (PDF)</h3>
+<h3>CV</h3>
 <input type="file" name="cv"><br><br>
 
 <button>Ajouter</button>
