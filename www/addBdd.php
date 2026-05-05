@@ -1,5 +1,4 @@
 <?php
-
 // fonction age automatique
 function age($birthdate) {
    
@@ -12,6 +11,13 @@ function age($birthdate) {
     return $interval->format("%Y");
 
 }
+function checktel($tel) {
+    if (preg_match("/[+][0-9]{3}[0-9]{8}/",$tel)) {
+        return $tel;
+    } else {
+        return false;
+    }
+}
 
 $erreur = null;
 
@@ -21,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $erreur = "Champs obligatoires manquants";
 
-    } else {
+    } elseif(checktel($_POST['tel_portable'])==true){
+
 //compte pour les competences
         $count = 0;
         for($i=1;$i<=10;$i++){
@@ -64,9 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([
                 'nom'            => $_POST['nom'],
                 'prenom'         => $_POST['prenom'],
-                'age'            =>age($_POST['date_naissance']),
+                'age'            => age($_POST['date_naissance']),
                 'date_naissance' => $_POST['date_naissance'],
-                'tel_portable'   => $_POST['tel_portable'],
+                'tel_portable'   => checktel($_POST['tel_portable']),
                 'tel_fixe'       => $_POST['tel_fixe'],
                 'email'          => $_POST['email'],
                 'profil'         => $_POST['profil'],
@@ -106,6 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php?page=list');
             exit;
         }
+    }else{
+        $erreur ="le numéros est incorect.";
     }
 }
 

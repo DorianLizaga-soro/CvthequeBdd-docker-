@@ -160,14 +160,10 @@ function age2($birthdate) {
                     echo 'Aucun CV</p>';
                 }
 ?>
-
             <button class="btnFiche" onclick="window.location.href='index.php?page=edit&id=<?= $c['id'] ?>'" >Modifier</button>
             <button class="btnFiche" onclick="if(confirm('Supprimer ce candidat ?')){ window.location.href='index.php?page=delete&id=<?= $c['id'] ?>';}"  >Supprimer</button>
         </article>
     </article>
 </div>
-
 <?php endforeach; ?>
-
 </section>
-
