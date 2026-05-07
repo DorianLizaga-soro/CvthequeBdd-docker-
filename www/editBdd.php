@@ -1,3 +1,57 @@
+<html>
+    <script>
+            function ajouterCompetence() {
+            const container = document.getElementById("competences-container");
+            const nb = container.getElementsByClassName("competence").length;
+
+                if (nb >=10) {
+                    alert("Vous ne pouvez ajouter que 10 compétences maximum");
+                    return;
+                }
+
+            const article = document.createElement("article");
+
+                article.innerHTML = `
+                    <input class="competence" data-role="tagsinput" >
+                    <button  id="btn_deleteComp" type="button" onclick="supprimerCompetence(this)">
+                    <i class="fa-regular fa-circle-xmark fa-2xl" style="color:red;"></i>
+                    </button>
+                    <br><br>`;
+
+            container.appendChild(article);
+
+            renumeroterCompetences();
+            }
+
+        
+        
+        function supprimerCompetence(btn) {
+            const container = document.getElementById("competences-container");
+            const nb = container.getElementsByClassName("competence").length;
+
+                if (nb <=5) {
+                    alert("Vous devez garder 5 compétences minimum");
+                    return;
+                }
+            btn.parentElement.remove();
+            renumeroterCompetences();
+            
+        }
+        
+        
+        function renumeroterCompetences() {
+            const container = document.getElementById("competences-container");
+            const competences = container.querySelectorAll("article");
+
+            competences.forEach((article, index) => {
+                const numero = index + 1;
+                const input = article.querySelector(".competence");
+                input.name = "competence" + numero ;});
+        }
+
+    </script>
+</html>
+
 <?php
 
 $id = $_GET['id'] ?? null;
@@ -137,7 +191,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 }
 ?>
 
-<link rel="stylesheet" href="/css/styleEdit.css">
+<link rel="stylesheet" href="/css/Edit.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <a href="index.php?page=list"><i id="retourAdd" class="fa-solid fa-circle-chevron-left fa-bounce" style="color: rgb(99, 230, 190);"></i></a>
@@ -164,10 +218,22 @@ Adresse ligne 2 : <input class="inputAdd" name="ligne2" value="<?= htmlspecialch
 Code postal : <input class="inputAdd" name="code_postal" value="<?= htmlspecialchars($adresse['code_postal'] ?? '') ?>">
 Ville : <input class="inputAdd" name="ville" value="<?= htmlspecialchars($adresse['ville'] ?? '') ?>">
 
-<h3>Compétences</h3>
-<?php for($i=0;$i<10;$i++): ?>
-<input class="inputAdd" name="competence<?= $i+1 ?>" value="<?= htmlspecialchars($competences[$i]) ?>"><br><br>
-<?php endfor; ?>
+<h3>Compétences</h3><button id ="btn_addComp" type="button" onclick="ajouterCompetence()">+</button>
+<article id="competences-container">
+<?php for($i=0;$i<10;$i++): if (!empty($competences[$i])) : if ($i>=5) : ?>
+<article>
+<input class="competence" name="competence<?= $i+1 ?>" value="<?=htmlspecialchars($competences[$i])?>">
+<button  id="btn_deleteComp" type="button" onclick="supprimerCompetence(this)">
+<i class="fa-regular fa-circle-xmark fa-2xl" style="color:red;"></i>
+</button><br><br>
+</article>
+<?php elseif($i<=5) : ?>
+<article>
+<input class="competence" name="competence<?= $i+1 ?>" value="<?=htmlspecialchars($competences[$i])?>">
+<br><br>
+</article>
+<?php endif;endif;endfor;  ?>
+</article>
 
 <h3>CV actuel</h3>
 
@@ -178,7 +244,7 @@ Ville : <input class="inputAdd" name="ville" value="<?= htmlspecialchars($adress
 <h3>Remplacer CV</h3>
 <input type="file" name="cv" ><br><br>
 
-<button>Enregistrer</button>
+<button id="btn_save">Enregistrer</button>
 
 </form>
 </article>
