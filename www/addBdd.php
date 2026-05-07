@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 
-<link rel="stylesheet" href="/css/styleAdd.css">
+<link rel="stylesheet" href="/css/Add.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <a href="index.php?page=list"><i id="retourAdd" class="fa-solid fa-circle-chevron-left fa-bounce" style="color: rgb(99, 230, 190);"></i></a>
@@ -210,7 +210,7 @@ Code postal : <input class="inputAdd" name="code_postal">
 Ville : <input class="inputAdd" name="ville">
 
 
-<h3>Compétences (5 minimum)</h3> <button id ="btn_addComp" type="button" onclick="ajouterCompetence()">+</button>
+<h3>Compétences (5 minimum)</h3> <button id ="btn_addComp" type="button" onclick="ajouterCompetence()"><i class="fa-regular fa-square-plus" style="color: rgb(0, 177, 7);"></i></button>
 
 <article id="competences-container">
 <label class="labelComp">Compétence 1 : </label>

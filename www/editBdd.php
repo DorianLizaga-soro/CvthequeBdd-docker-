@@ -218,7 +218,8 @@ Adresse ligne 2 : <input class="inputAdd" name="ligne2" value="<?= htmlspecialch
 Code postal : <input class="inputAdd" name="code_postal" value="<?= htmlspecialchars($adresse['code_postal'] ?? '') ?>">
 Ville : <input class="inputAdd" name="ville" value="<?= htmlspecialchars($adresse['ville'] ?? '') ?>">
 
-<h3>Compétences</h3><button id ="btn_addComp" type="button" onclick="ajouterCompetence()">+</button>
+<h3>Compétences</h3>
+<button id ="btn_addComp" type="button" onclick="ajouterCompetence()"><i class="fa-regular fa-square-plus" style="color: rgb(0, 177, 7);"></i></button>
 <article id="competences-container">
 <?php for($i=0;$i<10;$i++): if (!empty($competences[$i])) : if ($i>=5) : ?>
 <article>
@@ -243,7 +244,6 @@ Ville : <input class="inputAdd" name="ville" value="<?= htmlspecialchars($adress
 
 <h3>Remplacer CV</h3>
 <input type="file" name="cv" ><br><br>
-
 <button id="btn_save">Enregistrer</button>
 
 </form>
